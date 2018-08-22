@@ -68,6 +68,8 @@ class RawFileBrowser extends React.Component {
     onRenameFolder: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
     onDeleteFile: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
     onDeleteFolder: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
+    onOpenFolder: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
+    onUpdateFilter: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   }
 
   static defaultProps = {
@@ -267,6 +269,8 @@ class RawFileBrowser extends React.Component {
     this.setState(state => {
       state.openFolders[folderKey] = true
       return state
+    }, () => {
+      this.props.onOpenFolder(folderKey)
     })
   }
 
@@ -321,6 +325,8 @@ class RawFileBrowser extends React.Component {
       state.nameFilter = newValue
       state.searchResultsShown = SEARCH_RESULTS_PER_PAGE
       return state
+    }, () => {
+      this.props.onUpdateFilter(newValue)
     })
   }
 
@@ -342,7 +348,7 @@ class RawFileBrowser extends React.Component {
 
       // browser manipulation
       select: this.select,
-      openFolder: this.openFolder,
+      //openFolder: this.openFolder,
       toggleFolder: this.toggleFolder,
       beginAction: this.beginAction,
       endAction: this.endAction,
@@ -357,6 +363,8 @@ class RawFileBrowser extends React.Component {
       moveFolder: this.props.onMoveFolder ? this.moveFolder : undefined,
       deleteFile: this.props.onDeleteFile ? this.deleteFile : undefined,
       deleteFolder: this.props.onDeleteFolder ? this.deleteFolder : undefined,
+      openFolder: this.props.onOpenFolder ? this.openFolder : undefined,
+      updateFilter: this.props.onUpdateFilter ? this.updateFilter : undefined,
 
       getItemProps: getItemProps,
     }
