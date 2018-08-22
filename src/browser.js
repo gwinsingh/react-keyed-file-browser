@@ -68,7 +68,7 @@ class RawFileBrowser extends React.Component {
     onRenameFolder: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
     onDeleteFile: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
     onDeleteFolder: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
-    onOpenFolder: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
+    onToggleFolder: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
     onUpdateFilter: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   }
 
@@ -210,6 +210,24 @@ class RawFileBrowser extends React.Component {
       this.props.onDeleteFolder(key)
     })
   }
+  toggleFolder = (folderKey) => {
+    this.setState(state => {
+      if (folderKey in state.openFolders) {
+        delete state.openFolders[folderKey]
+      } else {
+        state.openFolders[folderKey] = true
+      }
+      return state
+    }, () => {
+        this.props.onToggleFolder(folderKey)
+    })
+  }
+  openFolder = (folderKey) => {
+    this.setState(state => {
+      state.openFolders[folderKey] = true
+      return state
+    })
+  }
 
   // browser manipulation
   beginAction = (action, key) => {
@@ -255,24 +273,7 @@ class RawFileBrowser extends React.Component {
       return state
     })
   }
-  toggleFolder = (folderKey) => {
-    this.setState(state => {
-      if (folderKey in state.openFolders) {
-        delete state.openFolders[folderKey]
-      } else {
-        state.openFolders[folderKey] = true
-      }
-      return state
-    })
-  }
-  openFolder = (folderKey) => {
-    this.setState(state => {
-      state.openFolders[folderKey] = true
-      return state
-    }, () => {
-      this.props.onOpenFolder(folderKey)
-    })
-  }
+  
 
   // event handlers
   handleGlobalClick = (event) => {
@@ -348,8 +349,8 @@ class RawFileBrowser extends React.Component {
 
       // browser manipulation
       select: this.select,
-      //openFolder: this.openFolder,
-      toggleFolder: this.toggleFolder,
+      openFolder: this.openFolder,
+      //toggleFolder: this.toggleFolder,
       beginAction: this.beginAction,
       endAction: this.endAction,
       preview: this.preview,
@@ -363,7 +364,7 @@ class RawFileBrowser extends React.Component {
       moveFolder: this.props.onMoveFolder ? this.moveFolder : undefined,
       deleteFile: this.props.onDeleteFile ? this.deleteFile : undefined,
       deleteFolder: this.props.onDeleteFolder ? this.deleteFolder : undefined,
-      openFolder: this.props.onOpenFolder ? this.openFolder : undefined,
+      toggleFolder: this.props.onToggleFolder ? this.toggleFolder : undefined,
       updateFilter: this.props.onUpdateFilter ? this.updateFilter : undefined,
 
       getItemProps: getItemProps,
